@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import ProductCard from '../components/ProductCard';
-import { Filter, ChevronDown, Check } from 'lucide-react';
+import { Filter, ChevronDown, Check, X } from 'lucide-react';
+import clsx from 'clsx';
 
 const ALL_PRODUCTS = [
     { id: '1', name: 'Cotton Oxford Shirt', price: 2999, rating: 4.8, reviews: 124, image: 'https://images.unsplash.com/photo-1596755094514-f87e32f85e2c?w=800&q=80', badge: 'New', colors: ['#fecdd3', '#ffffff', '#bfdbfe'], category: 'Men' },
@@ -14,6 +15,7 @@ const ALL_PRODUCTS = [
 export default function Shop() {
     const [activeCategory, setActiveCategory] = useState('All');
     const [priceRange, setPriceRange] = useState(10000);
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     const categories = ['All', 'Women', 'Men', 'Accessories', 'Dresses'];
     const sizes = ['XS', 'S', 'M', 'L', 'XL'];
@@ -24,103 +26,147 @@ export default function Shop() {
         p.price <= priceRange
     );
 
+    const FilterContent = () => (
+        <>
+            {/* Category Filter */}
+            <div>
+                <h3 className="text-sm font-medium tracking-widest uppercase mb-4 flex items-center">
+                    <Filter size={16} className="mr-2" /> Categories
+                </h3>
+                <ul className="space-y-2">
+                    {categories.map(cat => (
+                        <li key={cat}>
+                            <button
+                                onClick={() => { setActiveCategory(cat); setIsFilterOpen(false); }}
+                                className={`text-sm ${activeCategory === cat ? 'text-stone-900 font-medium' : 'text-stone-500 hover:text-stone-900'} transition-colors`}
+                            >
+                                {cat}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            {/* Price Filter */}
+            <div>
+                <h3 className="text-sm font-medium tracking-widest uppercase mb-4">Price Range</h3>
+                <input
+                    type="range"
+                    min="0"
+                    max="15000"
+                    step="500"
+                    value={priceRange}
+                    onChange={(e) => setPriceRange(Number(e.target.value))}
+                    className="w-full accent-stone-900 h-1 bg-stone-200 rounded-lg appearance-none cursor-pointer"
+                />
+                <div className="flex justify-between text-xs text-stone-500 mt-2">
+                    <span>₹0</span>
+                    <span>₹{priceRange.toLocaleString()}</span>
+                </div>
+            </div>
+
+            {/* Size Filter */}
+            <div>
+                <h3 className="text-sm font-medium tracking-widest uppercase mb-4">Size</h3>
+                <div className="flex flex-wrap gap-2">
+                    {sizes.map(size => (
+                        <button key={size} className="w-10 h-10 border border-stone-200 flex items-center justify-center text-sm hover:border-stone-900 transition-colors">
+                            {size}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* Color Filter */}
+            <div>
+                <h3 className="text-sm font-medium tracking-widest uppercase mb-4">Color</h3>
+                <div className="flex flex-wrap gap-2">
+                    {colors.map((color, idx) => (
+                        <button
+                            key={idx}
+                            className={`w-6 h-6 rounded-full border border-stone-200 hover:scale-110 transition-transform`}
+                            style={{ backgroundColor: color }}
+                        ></button>
+                    ))}
+                </div>
+            </div>
+        </>
+    );
+
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-            <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 border-b border-stone-200 pb-6">
-                <h1 className="text-3xl font-light tracking-wide text-stone-900 mb-4 md:mb-0">
-                    Shop {activeCategory !== 'All' ? activeCategory : 'All Collections'}
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 border-b border-stone-200 pb-6 gap-4">
+                <h1 className="text-3xl font-light tracking-wide text-stone-900">
+                    Shop {activeCategory !== 'All' ? activeCategory : 'Collections'}
                 </h1>
-                <div className="flex items-center space-x-4">
-                    <span className="text-sm text-stone-500">{filteredProducts.length} Products</span>
-                    <div className="relative">
-                        <button className="flex items-center text-sm font-medium tracking-widest uppercase border border-stone-200 px-4 py-2 hover:border-stone-900 transition-colors">
-                            Sort By <ChevronDown size={16} className="ml-2" />
+                <div className="flex items-center justify-between md:justify-end w-full md:w-auto space-x-4">
+                    <span className="text-sm text-stone-500 hidden sm:inline-block">{filteredProducts.length} Products</span>
+
+                    <div className="flex space-x-2 w-full md:w-auto">
+                        <button
+                            onClick={() => setIsFilterOpen(true)}
+                            className="flex-1 md:hidden flex justify-center items-center text-xs font-medium tracking-widest uppercase border border-stone-200 px-4 py-3 hover:border-stone-900 transition-colors"
+                        >
+                            <Filter size={16} className="mr-2" /> Filters
                         </button>
+                        <div className="relative flex-1 md:flex-none">
+                            <button className="w-full flex justify-center items-center text-xs font-medium tracking-widest uppercase border border-stone-200 px-4 py-3 hover:border-stone-900 transition-colors">
+                                Sort <ChevronDown size={14} className="ml-2" />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-8">
-                {/* Sidebar Filters */}
-                <div className="w-full md:w-64 flex-shrink-0 space-y-8 pr-4">
-                    {/* Category Filter */}
-                    <div>
-                        <h3 className="text-sm font-medium tracking-widest uppercase mb-4 flex items-center">
-                            <Filter size={16} className="mr-2" /> Categories
-                        </h3>
-                        <ul className="space-y-2">
-                            {categories.map(cat => (
-                                <li key={cat}>
-                                    <button
-                                        onClick={() => setActiveCategory(cat)}
-                                        className={`text-sm ${activeCategory === cat ? 'text-stone-900 font-medium' : 'text-stone-500 hover:text-stone-900'} transition-colors`}
-                                    >
-                                        {cat}
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+            <div className="flex flex-col md:flex-row gap-8 relative">
+                {/* Desktop Sidebar Filters */}
+                <div className="hidden md:block w-64 flex-shrink-0 space-y-8 pr-4 sticky top-32 h-fit">
+                    <FilterContent />
+                </div>
 
-                    {/* Price Filter */}
-                    <div>
-                        <h3 className="text-sm font-medium tracking-widest uppercase mb-4">Price Range</h3>
-                        <input
-                            type="range"
-                            min="0"
-                            max="15000"
-                            step="500"
-                            value={priceRange}
-                            onChange={(e) => setPriceRange(Number(e.target.value))}
-                            className="w-full accent-stone-900 h-1 bg-stone-200 rounded-lg appearance-none cursor-pointer"
-                        />
-                        <div className="flex justify-between text-xs text-stone-500 mt-2">
-                            <span>₹0</span>
-                            <span>₹{priceRange.toLocaleString()}</span>
-                        </div>
-                    </div>
+                {/* Mobile Filter Drawer */}
+                <div className={clsx(
+                    "fixed inset-0 bg-black/40 z-50 md:hidden transition-opacity duration-300",
+                    isFilterOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
+                )} onClick={() => setIsFilterOpen(false)}></div>
 
-                    {/* Size Filter */}
-                    <div>
-                        <h3 className="text-sm font-medium tracking-widest uppercase mb-4">Size</h3>
-                        <div className="flex flex-wrap gap-2">
-                            {sizes.map(size => (
-                                <button key={size} className="w-10 h-10 border border-stone-200 flex items-center justify-center text-sm hover:border-stone-900 transition-colors">
-                                    {size}
-                                </button>
-                            ))}
-                        </div>
+                <div className={clsx(
+                    "fixed inset-y-0 left-0 w-4/5 max-w-sm bg-white z-50 md:hidden shadow-2xl transition-transform duration-300 ease-in-out flex flex-col",
+                    isFilterOpen ? "translate-x-0" : "-translate-x-full"
+                )}>
+                    <div className="flex justify-between items-center p-6 border-b border-stone-100 shrink-0">
+                        <span className="font-serif text-xl tracking-tighter uppercase font-medium text-stone-900">Filters</span>
+                        <button onClick={() => setIsFilterOpen(false)} className="text-stone-900 hover:text-stone-500 transition-colors p-2 -mr-2">
+                            <X size={24} strokeWidth={1.5} />
+                        </button>
                     </div>
-
-                    {/* Color Filter */}
-                    <div>
-                        <h3 className="text-sm font-medium tracking-widest uppercase mb-4">Color</h3>
-                        <div className="flex flex-wrap gap-2">
-                            {colors.map((color, idx) => (
-                                <button
-                                    key={idx}
-                                    className={`w-6 h-6 rounded-full border border-stone-200 hover:scale-110 transition-transform`}
-                                    style={{ backgroundColor: color }}
-                                ></button>
-                            ))}
-                        </div>
+                    <div className="flex-1 overflow-y-auto w-full px-6 py-8 space-y-10">
+                        <FilterContent />
+                    </div>
+                    <div className="p-6 border-t border-stone-100 shrink-0">
+                        <button
+                            onClick={() => setIsFilterOpen(false)}
+                            className="w-full bg-stone-900 text-white py-4 text-xs tracking-widest uppercase font-medium"
+                        >
+                            Show {filteredProducts.length} Results
+                        </button>
                     </div>
                 </div>
 
                 {/* Product Grid */}
                 <div className="flex-grow">
                     {filteredProducts.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8">
                             {filteredProducts.map(product => (
                                 <ProductCard key={product.id} product={product} />
                             ))}
                         </div>
                     ) : (
                         <div className="flex flex-col items-center justify-center h-64 border border-dashed border-stone-300">
-                            <p className="text-stone-500 mb-4">No products found matching your filters.</p>
+                            <p className="text-stone-500 mb-4 text-center">No products found matching filters.</p>
                             <button
                                 onClick={() => { setActiveCategory('All'); setPriceRange(15000); }}
-                                className="text-sm tracking-widest uppercase bg-stone-900 text-white px-6 py-2"
+                                className="text-xs tracking-widest uppercase bg-stone-900 text-white px-6 py-3"
                             >
                                 Clear Filters
                             </button>

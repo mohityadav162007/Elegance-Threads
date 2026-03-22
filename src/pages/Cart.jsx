@@ -49,29 +49,29 @@ export default function Cart() {
           <div className="flex flex-col lg:flex-row gap-16">
 
             {/* Product List */}
-            <div className="w-full lg:w-2/3 space-y-8">
+            <div className="w-full lg:w-2/3 space-y-4 sm:space-y-8">
               {cartItems.map(item => (
-                <div key={item.id} className="bg-white p-6 flex flex-col sm:flex-row gap-6 items-start sm:items-center border-b border-[#f2f4f3] group transition-all duration-300 hover:-translate-y-1 hover:shadow-sm">
-                  <div className="w-24 h-32 flex-shrink-0 bg-[#f9f9f8] overflow-hidden">
+                <div key={item.id} className="bg-white p-4 sm:p-6 flex flex-row gap-4 sm:gap-6 items-center border-b border-[#f2f4f3] group transition-all duration-300 hover:-translate-y-1 hover:shadow-sm">
+                  <div className="w-20 sm:w-24 h-28 sm:h-32 flex-shrink-0 bg-[#f9f9f8] overflow-hidden">
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   </div>
                   <div className="flex-grow">
-                    <div className="flex justify-between items-start mb-2">
-                      <Link to={`/product/${item.id}`} className="text-lg font-medium hover:text-[#5f5e5e] transition-colors">{item.name}</Link>
-                      <button onClick={() => removeItem(item.id)} className="text-[#adb3b2] hover:text-[#2d3433] transition-colors">
-                        <X size={20} strokeWidth={1} />
+                    <div className="flex justify-between items-start mb-1 sm:mb-2">
+                      <Link to={`/product/${item.id}`} className="text-sm sm:text-lg font-medium hover:text-[#5f5e5e] transition-colors">{item.name}</Link>
+                      <button onClick={() => removeItem(item.id)} className="text-[#adb3b2] hover:text-[#2d3433] transition-colors -mt-1 -mr-1 p-1">
+                        <X size={18} strokeWidth={1.5} />
                       </button>
                     </div>
                     <p className="text-sm font-sans tracking-widest uppercase text-[#5f5e5e] mb-4">
                       {item.color} | Size: {item.size}
                     </p>
                     <div className="flex justify-between items-center">
-                      <div className="flex items-center border border-[#adb3b2] w-32 justify-between">
-                        <button onClick={() => updateQuantity(item.id, -1)} className="p-2 hover:bg-[#f9f9f8] transition-colors"><Minus size={14} /></button>
+                      <div className="flex items-center border border-[#adb3b2] w-24 sm:w-32 justify-between">
+                        <button onClick={() => updateQuantity(item.id, -1)} className="p-1 sm:p-2 hover:bg-[#f9f9f8] transition-colors"><Minus size={14} /></button>
                         <span className="text-sm font-medium">{item.quantity}</span>
-                        <button onClick={() => updateQuantity(item.id, 1)} className="p-2 hover:bg-[#f9f9f8] transition-colors"><Plus size={14} /></button>
+                        <button onClick={() => updateQuantity(item.id, 1)} className="p-1 sm:p-2 hover:bg-[#f9f9f8] transition-colors"><Plus size={14} /></button>
                       </div>
-                      <span className="text-lg font-serif">₹{(item.price * item.quantity).toLocaleString()}</span>
+                      <span className="text-base sm:text-lg font-serif">₹{(item.price * item.quantity).toLocaleString()}</span>
                     </div>
                   </div>
                 </div>

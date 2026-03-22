@@ -23,7 +23,7 @@ export default function Wishlist() {
         </div>
 
         {wishlist.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
             {wishlist.map(item => (
               <div key={item.id} className="bg-white group relative transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg flex flex-col h-full">
                 <div className="relative aspect-[3/4] overflow-hidden bg-[#f9f9f8]">

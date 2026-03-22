@@ -69,8 +69,8 @@ export default function Home() {
             </section>
 
             {/* Categories Grid */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
                     {[
                         { name: 'Women', img: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80' },
                         { name: 'Men', img: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?w=600&q=80' },
@@ -80,9 +80,9 @@ export default function Home() {
                         <Link key={idx} to="/shop" className="group relative aspect-[3/4] overflow-hidden bg-stone-100">
                             <img src={cat.img} alt={cat.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent"></div>
-                            <div className="absolute bottom-6 left-6 right-6 flex justify-between items-center text-white">
-                                <span className="text-lg font-medium tracking-wide">{cat.name}</span>
-                                <span className="text-sm tracking-widest uppercase opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">Shop</span>
+                            <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 flex justify-center md:justify-between items-center text-white">
+                                <span className="text-sm md:text-lg font-medium tracking-wide">{cat.name}</span>
+                                <span className="hidden md:inline-block text-sm tracking-widest uppercase opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">Shop</span>
                             </div>
                         </Link>
                     ))}
@@ -90,14 +90,14 @@ export default function Home() {
             </section>
 
             {/* New Arrivals Grid */}
-            <section id="new-arrivals" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                <div className="flex justify-between items-end mb-10">
-                    <h2 className="text-3xl font-light tracking-wide text-stone-900">New Arrivals</h2>
-                    <Link to="/shop" className="text-sm font-medium tracking-widest uppercase text-stone-900 hover:text-stone-500 transition-colors border-b border-stone-900 pb-1">
-                        View All &rarr;
+            <section id="new-arrivals" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+                <div className="flex justify-between items-end mb-8 md:mb-10">
+                    <h2 className="text-2xl md:text-3xl font-light tracking-wide text-stone-900">New Arrivals</h2>
+                    <Link to="/shop" className="text-xs md:text-sm font-medium tracking-widest uppercase text-stone-900 hover:text-stone-500 transition-colors border-b border-stone-900 pb-1">
+                        View All
                     </Link>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
                     {FEATURED_PRODUCTS.map(product => (
                         <ProductCard key={product.id} product={product} />
                     ))}
