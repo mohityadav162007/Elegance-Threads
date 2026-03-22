@@ -142,8 +142,8 @@ export default function Navbar() {
 
             {/* Mobile Menu Overlay */}
             <div className={clsx(
-                "fixed inset-0 bg-white z-50 transition-transform duration-500 ease-[cubic-bezier(0.83,0,0.17,1)] md:hidden pointer-events-none flex flex-col h-full",
-                isMobileMenuOpen ? "translate-x-0 pointer-events-auto" : "-translate-x-full"
+                "fixed inset-0 bg-white z-50 transition-transform duration-500 ease-[cubic-bezier(0.83,0,0.17,1)] md:hidden flex flex-col h-full",
+                isMobileMenuOpen ? "translate-x-0 pointer-events-auto" : "-translate-x-full pointer-events-none"
             )}>
                 <div className="flex justify-between items-center p-6 border-b border-stone-100 bg-white shrink-0">
                     <span className="font-serif text-xl tracking-tighter uppercase font-medium text-stone-900">Menu</span>
