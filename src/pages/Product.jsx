@@ -1,180 +1,148 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ChevronRight, Heart, Minus, Plus, Share2, Star } from 'lucide-react';
+import { ChevronRight, Minus, Plus, ChevronDown, ShoppingBag, Lock } from 'lucide-react';
+import { API_URL, fetchProducts } from '../services/api';
+import ProductCard from '../components/ProductCard';
 
-const PRODUCT_DB = {
-    '1': {
-        id: '1',
-        name: 'Cotton Oxford Shirt',
-        price: 2999,
-        description: 'A timeless wardrobe essential. Crafted from premium 100% breathable oxford cotton, this shirt offers a relaxed yet tailored fit. Features a classic button-down collar and a curved hem, perfect for both casual weekends and smart-casual office days.',
-        details: ['100% Cotton', 'Regular fit', 'Machine wash cold', 'Made in India'],
-        rating: 4.8,
-        reviews: 124,
-        images: [
-            'https://images.unsplash.com/photo-1596755094514-f87e32f85e2c?w=800&q=80',
-            'https://images.unsplash.com/photo-1604176354204-9268737828e4?w=800&q=80',
-            'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=800&q=80',
-        ],
-        colors: [
-            { name: 'Pink', hex: '#fecdd3' },
-            { name: 'White', hex: '#ffffff' },
-            { name: 'Light Blue', hex: '#bfdbfe' }
-        ],
-        sizes: ['S', 'M', 'L', 'XL', 'XXL']
-    }
-};
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1550614000-4b95eb1580bc?q=80&w=600&auto=format&fit=crop';
 
 export default function Product() {
     const { id } = useParams();
-    const product = PRODUCT_DB[id] || PRODUCT_DB['1']; // fallback to ID 1 for demo
-
+    const [product, setProduct] = useState(null);
+    const [relatedProducts, setRelatedProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [activeImage, setActiveImage] = useState(0);
-    const [selectedColor, setSelectedColor] = useState(product.colors[0].name);
     const [selectedSize, setSelectedSize] = useState('M');
     const [quantity, setQuantity] = useState(1);
-    const [activeTab, setActiveTab] = useState('description');
+    const [openAccordion, setOpenAccordion] = useState(null);
 
-    const updateQuantity = (change) => {
-        if (quantity + change >= 1 && quantity + change <= 10) {
-            setQuantity(quantity + change);
-        }
-    };
+    useEffect(() => {
+        const load = async () => {
+            try {
+                const res = await fetch(`${API_URL}/products/${id}`);
+                if (!res.ok) throw new Error('Not found');
+                const data = await res.json();
+                setProduct(data);
+                const all = await fetchProducts();
+                setRelatedProducts(all.filter(p => p._id !== id).slice(0, 3));
+            } catch (e) {
+                console.error(e);
+            } finally {
+                setLoading(false);
+            }
+        };
+        load();
+    }, [id]);
+
+    if (loading) return <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center text-[#666] text-sm tracking-widest uppercase">Loading...</div>;
+    if (!product) return (
+        <div className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center">
+            <h2 className="text-3xl font-serif text-white mb-4">Product not found</h2>
+            <Link to="/shop" className="text-xs tracking-[0.2em] uppercase text-[#c9a96e] border border-[#c9a96e] px-6 py-2 hover:bg-[#c9a96e] hover:text-[#0a0a0a] transition-colors">Back to Archive</Link>
+        </div>
+    );
+
+    const images = product.imageUrl ? [product.imageUrl] : [FALLBACK_IMAGE];
+    const sizes = ['S', 'M', 'L', 'XL'];
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-            {/* Breadcrumbs */}
-            <nav className="flex text-xs tracking-widest uppercase text-stone-500 mb-8 space-x-2">
-                <Link to="/" className="hover:text-stone-900 transition-colors">Home</Link>
-                <ChevronRight size={14} />
-                <Link to="/shop" className="hover:text-stone-900 transition-colors">Shop</Link>
-                <ChevronRight size={14} />
-                <span className="text-stone-900">{product.name}</span>
-            </nav>
+        <div className="bg-[#0a0a0a] min-h-screen">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+                {/* Breadcrumbs */}
+                <nav className="flex text-[10px] tracking-[0.15em] uppercase text-[#666] mb-8 space-x-2 items-center">
+                    <Link to="/" className="hover:text-[#c9a96e] transition-colors">Home</Link>
+                    <ChevronRight size={12} />
+                    <Link to="/shop" className="hover:text-[#c9a96e] transition-colors">Archive</Link>
+                    <ChevronRight size={12} />
+                    <span className="text-[#999]">{product.name}</span>
+                </nav>
 
-            <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
-                {/* Image Gallery */}
-                <div className="w-full lg:w-3/5 flex flex-col md:flex-row gap-4">
-                    <div className="flex md:flex-col gap-4 order-2 md:order-1 overflow-x-auto md:overflow-visible">
-                        {product.images.map((img, idx) => (
-                            <button
-                                key={idx}
-                                onClick={() => setActiveImage(idx)}
-                                className={`flex-shrink-0 w-20 h-24 md:w-24 md:h-32 bg-stone-100 border ${activeImage === idx ? 'border-stone-900' : 'border-transparent'} transition-colors`}
-                            >
-                                <img src={img} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" />
-                            </button>
-                        ))}
-                    </div>
-                    <div className="flex-grow order-1 md:order-2 bg-stone-100 aspect-[3/4] relative">
-                        <img src={product.images[activeImage]} alt={product.name} className="absolute inset-0 w-full h-full object-cover object-center" />
-                    </div>
-                </div>
-
-                {/* Product Info */}
-                <div className="w-full lg:w-2/5 flex flex-col pt-2 md:pt-8">
-                    <h1 className="text-3xl md:text-4xl font-light tracking-wide text-stone-900 mb-2">{product.name}</h1>
-                    <div className="flex items-center space-x-4 mb-6">
-                        <span className="text-2xl font-light text-stone-900">₹{product.price.toLocaleString()}</span>
-                        <div className="flex items-center text-stone-900 space-x-1 border-l border-stone-200 pl-4">
-                            <Star size={14} fill="currentColor" />
-                            <span className="text-sm">{product.rating} ({product.reviews} Reviews)</span>
-                        </div>
-                    </div>
-
-                    <p className="text-stone-600 text-sm leading-relaxed mb-8">
-                        {product.description}
-                    </p>
-
-                    {/* Color Selector */}
-                    <div className="mb-6">
-                        <div className="flex justify-between items-center mb-3">
-                            <span className="text-sm font-medium tracking-widest uppercase">Color:</span>
-                            <span className="text-sm text-stone-500">{selectedColor}</span>
-                        </div>
-                        <div className="flex flex-wrap gap-3">
-                            {product.colors.map((color, idx) => (
+                <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
+                    {/* Image Gallery */}
+                    <div className="w-full lg:w-3/5 flex flex-col md:flex-row gap-4">
+                        <div className="flex md:flex-col gap-3 order-2 md:order-1 overflow-x-auto md:overflow-visible">
+                            {images.map((img, idx) => (
                                 <button
                                     key={idx}
-                                    onClick={() => setSelectedColor(color.name)}
-                                    className={`w-8 h-8 rounded-full border-2 ${selectedColor === color.name ? 'border-stone-900 p-[2px]' : 'border-transparent p-[2px]'} transition-all`}
+                                    onClick={() => setActiveImage(idx)}
+                                    className={`flex-shrink-0 w-20 h-24 md:w-24 md:h-32 bg-[#141414] border ${activeImage === idx ? 'border-[#c9a96e]' : 'border-[#2a2a2a]'} transition-colors`}
                                 >
-                                    <div className="w-full h-full rounded-full border border-stone-200" style={{ backgroundColor: color.hex }}></div>
+                                    <img src={img} alt="" className="w-full h-full object-cover" onError={(e) => { e.target.src = FALLBACK_IMAGE; }} />
                                 </button>
                             ))}
                         </div>
-                    </div>
-
-                    {/* Size Selector */}
-                    <div className="mb-8">
-                        <div className="flex justify-between items-center mb-3">
-                            <span className="text-sm font-medium tracking-widest uppercase">Size:</span>
-                            <button className="text-xs text-stone-500 uppercase tracking-widest underline underline-offset-4 hover:text-stone-900 transition-colors">Size Guide</button>
-                        </div>
-                        <div className="grid grid-cols-5 gap-2">
-                            {product.sizes.map((size) => (
-                                <button
-                                    key={size}
-                                    onClick={() => setSelectedSize(size)}
-                                    className={`py-3 text-sm flex items-center justify-center border ${selectedSize === size ? 'border-stone-900 bg-stone-900 text-white' : 'border-stone-200 text-stone-900 hover:border-stone-400'} transition-all`}
-                                >
-                                    {size}
-                                </button>
-                            ))}
+                        <div className="flex-grow order-1 md:order-2 bg-[#141414] aspect-[3/4] relative border border-[#2a2a2a]">
+                            <img src={images[activeImage]} alt={product.name} className="absolute inset-0 w-full h-full object-cover" onError={(e) => { e.target.src = FALLBACK_IMAGE; }} />
                         </div>
                     </div>
 
-                    {/* Actions */}
-                    <div className="flex space-x-4 mb-8">
-                        <div className="flex items-center border border-stone-200 w-32 justify-between">
-                            <button onClick={() => updateQuantity(-1)} className="p-3 text-stone-500 hover:text-stone-900 transition-colors"><Minus size={16} /></button>
-                            <span className="text-sm font-medium">{quantity}</span>
-                            <button onClick={() => updateQuantity(1)} className="p-3 text-stone-500 hover:text-stone-900 transition-colors"><Plus size={16} /></button>
+                    {/* Product Info */}
+                    <div className="w-full lg:w-2/5 flex flex-col pt-2">
+                        {product.category && (
+                            <span className="text-[10px] tracking-[0.2em] uppercase text-[#c9a96e] mb-2">{product.category}</span>
+                        )}
+                        <h1 className="text-3xl md:text-5xl font-serif font-bold text-white mb-4 leading-tight uppercase">{product.name}</h1>
+                        <span className="text-lg text-[#c9a96e] mb-6">₹{product.price?.toLocaleString()} </span>
+
+                        {product.description && (
+                            <p className="text-[#999] text-sm leading-relaxed mb-8">{product.description}</p>
+                        )}
+
+                        {/* Size Selector */}
+                        <div className="mb-8">
+                            <div className="flex justify-between items-center mb-3">
+                                <span className="text-xs tracking-[0.2em] uppercase text-white font-semibold">Size</span>
+                                <button className="text-[10px] tracking-[0.15em] uppercase text-[#666] underline underline-offset-4 hover:text-[#c9a96e] transition-colors">Size Guide</button>
+                            </div>
+                            <div className="grid grid-cols-4 gap-2">
+                                {sizes.map(size => (
+                                    <button
+                                        key={size}
+                                        onClick={() => setSelectedSize(size)}
+                                        className={`py-3 text-sm flex items-center justify-center border transition-all ${selectedSize === size ? 'border-[#c9a96e] text-[#c9a96e]' : 'border-[#2a2a2a] text-[#999] hover:border-[#666]'}`}
+                                    >
+                                        {size}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                        <button className="flex-grow bg-stone-900 text-white text-sm font-medium tracking-widest uppercase hover:bg-stone-800 transition-colors">
-                            Add To Bag
+
+                        {/* Actions */}
+                        <button className="w-full bg-white text-[#0a0a0a] py-4 text-xs font-semibold tracking-[0.2em] uppercase hover:bg-[#c9a96e] transition-colors flex items-center justify-center gap-2 mb-3">
+                            <ShoppingBag size={16} /> Add To Cart
                         </button>
-                        <button className="p-4 border border-stone-200 text-stone-900 hover:border-stone-900 transition-colors">
-                            <Heart size={20} strokeWidth={1.5} />
+                        <button className="w-full border border-[#2a2a2a] text-white py-4 text-xs font-semibold tracking-[0.2em] uppercase hover:border-[#c9a96e] hover:text-[#c9a96e] transition-colors mb-8">
+                            Buy Now
                         </button>
-                    </div>
 
-                    {/* Accordion/Tabs */}
-                    <div className="border-t border-stone-200 mt-4 pt-6">
-                        <div className="flex space-x-8 mb-4 border-b border-stone-200">
-                            <button
-                                onClick={() => setActiveTab('details')}
-                                className={`text-sm tracking-widest uppercase pb-3 border-b-2 ${activeTab === 'details' ? 'border-stone-900 font-medium' : 'border-transparent text-stone-500'}`}
-                            >
-                                Details
+                        {/* Accordions */}
+                        {['Details & Care', 'Shipping & Returns'].map(title => (
+                            <button key={title} onClick={() => setOpenAccordion(openAccordion === title ? null : title)} className="w-full flex justify-between items-center border-t border-[#2a2a2a] py-4 text-xs tracking-[0.15em] uppercase text-[#999] hover:text-white transition-colors">
+                                {title}
+                                <ChevronDown size={16} className={`transition-transform ${openAccordion === title ? 'rotate-180' : ''}`} />
                             </button>
-                            <button
-                                onClick={() => setActiveTab('shipping')}
-                                className={`text-sm tracking-widest uppercase pb-3 border-b-2 ${activeTab === 'shipping' ? 'border-stone-900 font-medium' : 'border-transparent text-stone-500'}`}
-                            >
-                                Shipping
-                            </button>
-                        </div>
-                        <div className="text-sm text-stone-600 leading-relaxed py-2">
-                            {activeTab === 'details' ? (
-                                <ul className="list-disc pl-5 space-y-2">
-                                    {product.details.map((detail, idx) => (
-                                        <li key={idx}>{detail}</li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p>Free standard shipping on all orders over ₹2,999. Usually arrives within 3-5 business days. Express shipping available at checkout. Easy 30-day returns.</p>
-                            )}
-                        </div>
+                        ))}
+                        {openAccordion && (
+                            <div className="text-sm text-[#666] leading-relaxed py-2 border-t border-[#2a2a2a]">
+                                {openAccordion === 'Details & Care'
+                                    ? <p>{product.description || 'No details available.'}</p>
+                                    : <p>Free shipping on orders over ₹2,999. Easy 30-day returns. Standard delivery in 3-5 business days.</p>}
+                            </div>
+                        )}
                     </div>
-
-                    {/* Share */}
-                    <div className="mt-8 flex items-center space-x-2 text-stone-500 hover:text-stone-900 cursor-pointer transition-colors w-fit">
-                        <Share2 size={16} />
-                        <span className="text-xs tracking-widest uppercase font-medium">Share</span>
-                    </div>
-
                 </div>
+
+                {/* Complete The Look */}
+                {relatedProducts.length > 0 && (
+                    <section className="mt-20 md:mt-32">
+                        <h2 className="text-2xl md:text-3xl font-serif font-bold text-white mb-8 uppercase">Complete The Look</h2>
+                        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                            {relatedProducts.map(p => (
+                                <ProductCard key={p._id} product={p} />
+                            ))}
+                        </div>
+                    </section>
+                )}
             </div>
         </div>
     );

@@ -1,114 +1,70 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, ShoppingBag, User, Heart, Menu, X, Globe, ChevronDown } from 'lucide-react';
+import { ShoppingBag, User, Menu, X } from 'lucide-react';
 import clsx from 'clsx';
 
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isSearchOpen, setIsSearchOpen] = useState(false);
-    const [isLangOpen, setIsLangOpen] = useState(false);
-    const [isShopDropdownOpen, setIsShopDropdownOpen] = useState(false);
 
     useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 20);
-        };
+        const handleScroll = () => setIsScrolled(window.scrollY > 20);
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     const navLinks = [
-        { name: 'Shop', path: '/shop', hasDropdown: true },
         { name: 'Collections', path: '/collections' },
-        { name: 'About', path: '/about' },
-        { name: 'Journal', path: '/journal' }
+        { name: 'Archive', path: '/shop' },
+        { name: 'Editorial', path: '/journal' },
+        { name: 'About', path: '/about' }
     ];
 
     return (
         <>
             <nav className={clsx(
-                "fixed w-full z-40 transition-all duration-300 border-b border-transparent top-10",
-                isScrolled ? "bg-white/95 backdrop-blur-md shadow-sm border-stone-200 py-3 md:py-4" : "bg-white py-4 md:py-6"
+                "fixed w-full z-40 transition-all duration-500 border-b",
+                isScrolled
+                    ? "bg-[#0a0a0a]/95 backdrop-blur-md border-[#2a2a2a] py-4"
+                    : "bg-transparent border-transparent py-5"
             )}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center h-full">
+                    <div className="flex justify-between items-center">
 
-                        {/* Mobile Menu Button */}
-                        <div className="md:hidden flex items-center flex-1">
-                            <button onClick={() => setIsMobileMenuOpen(true)} className="text-stone-900 hover:text-stone-500 transition-colors p-2 -ml-2">
-                                <Menu size={24} strokeWidth={1.5} />
-                            </button>
-                        </div>
-
-                        {/* Logo */}
-                        <div className="flex-shrink-0 flex items-center justify-center flex-1 md:flex-none md:justify-start">
-                            <Link to="/" className="font-serif text-xl md:text-2xl tracking-tighter uppercase font-medium text-stone-900">
-                                Elegance
-                            </Link>
-                        </div>
-
-                        {/* Desktop Navigation */}
-                        <div className="hidden md:flex items-center space-x-10">
-                            {navLinks.map((link) => (link.hasDropdown ? (
-                                <div
+                        {/* Left Nav Links (Desktop) */}
+                        <div className="hidden md:flex items-center space-x-8 flex-1">
+                            {navLinks.map(link => (
+                                <Link
                                     key={link.name}
-                                    className="relative group"
-                                    onMouseEnter={() => setIsShopDropdownOpen(true)}
-                                    onMouseLeave={() => setIsShopDropdownOpen(false)}
+                                    to={link.path}
+                                    className="text-[11px] font-sans tracking-[0.2em] uppercase text-[#999] hover:text-[#c9a96e] transition-colors duration-300"
                                 >
-                                    <Link to={link.path} className="text-xs font-sans tracking-widest uppercase text-stone-900 hover:text-stone-500 transition-colors flex items-center">
-                                        {link.name} <ChevronDown size={14} className="ml-1" />
-                                    </Link>
-                                    {/* Dropdown Menu */}
-                                    <div className={clsx("absolute top-full left-0 pt-6 transition-all duration-300 w-48", isShopDropdownOpen ? "opacity-100 translate-y-0 visible" : "opacity-0 translate-y-2 invisible")}>
-                                        <div className="bg-white border border-stone-200 shadow-xl py-4 flex flex-col space-y-3">
-                                            <Link to="/shop" className="px-6 text-xs tracking-widest uppercase hover:text-stone-500 transition-colors">All Clothing</Link>
-                                            <Link to="/shop" className="px-6 text-xs tracking-widest uppercase hover:text-stone-500 transition-colors">Dresses</Link>
-                                            <Link to="/shop" className="px-6 text-xs tracking-widest uppercase hover:text-stone-500 transition-colors">Tops & Shirts</Link>
-                                            <Link to="/shop" className="px-6 text-xs tracking-widest uppercase hover:text-stone-500 transition-colors">Trousers</Link>
-                                            <Link to="/shop" className="px-6 text-xs tracking-widest uppercase hover:text-stone-500 transition-colors">Outerwear</Link>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <Link key={link.name} to={link.path} className="text-xs font-sans tracking-widest uppercase text-stone-900 hover:text-stone-500 transition-colors">
                                     {link.name}
                                 </Link>
-                            )))}
+                            ))}
                         </div>
 
-                        {/* Icons */}
-                        <div className="flex items-center space-x-4 md:space-x-5 flex-1 justify-end md:flex-none">
-                            <div className="relative group hidden sm:block">
-                                <button
-                                    onClick={() => setIsLangOpen(!isLangOpen)}
-                                    className="text-stone-900 hover:text-stone-500 transition-colors"
-                                >
-                                    <Globe size={20} strokeWidth={1.5} />
-                                </button>
-                                {/* Language Modal */}
-                                {isLangOpen && (
-                                    <div className="absolute top-full right-0 mt-4 w-40 bg-white border border-stone-200 shadow-xl py-4 flex flex-col space-y-3 z-50">
-                                        <button onClick={() => setIsLangOpen(false)} className="px-6 text-left text-xs tracking-widest uppercase hover:text-stone-500 transition-colors font-medium">English (USD)</button>
-                                        <button onClick={() => setIsLangOpen(false)} className="px-6 text-left text-xs tracking-widest uppercase hover:text-stone-500 transition-colors">French (EUR)</button>
-                                        <button onClick={() => setIsLangOpen(false)} className="px-6 text-left text-xs tracking-widest uppercase hover:text-stone-500 transition-colors">German (EUR)</button>
-                                    </div>
-                                )}
-                            </div>
-                            <button onClick={() => setIsSearchOpen(true)} className="text-stone-900 hover:text-stone-500 transition-colors">
-                                <Search size={22} strokeWidth={1.5} />
+                        {/* Mobile Menu Button */}
+                        <div className="md:hidden flex-1">
+                            <button onClick={() => setIsMobileMenuOpen(true)} className="text-white hover:text-[#c9a96e] transition-colors p-1">
+                                <Menu size={22} strokeWidth={1.5} />
                             </button>
-                            <Link to="/orders" className="text-stone-900 hover:text-stone-500 transition-colors hidden md:block">
-                                <User size={22} strokeWidth={1.5} />
+                        </div>
+
+                        {/* Center Logo */}
+                        <div className="flex-shrink-0 flex items-center justify-center">
+                            <Link to="/" className="font-serif text-lg md:text-xl tracking-[0.15em] uppercase font-semibold text-white">
+                                Style-lit
                             </Link>
-                            <Link to="/wishlist" className="text-stone-900 hover:text-stone-500 transition-colors relative hidden md:block">
-                                <Heart size={22} strokeWidth={1.5} />
-                                <span className="absolute -top-1.5 -right-2 bg-rose-600 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full leading-none">2</span>
+                        </div>
+
+                        {/* Right Icons */}
+                        <div className="flex items-center space-x-5 flex-1 justify-end">
+                            <Link to="/cart" className="text-white hover:text-[#c9a96e] transition-colors relative">
+                                <ShoppingBag size={20} strokeWidth={1.5} />
                             </Link>
-                            <Link to="/cart" className="text-stone-900 hover:text-stone-500 transition-colors relative">
-                                <ShoppingBag size={22} strokeWidth={1.5} />
-                                <span className="absolute -top-1.5 -right-2 bg-stone-900 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full leading-none">3</span>
+                            <Link to="/orders" className="text-white hover:text-[#c9a96e] transition-colors">
+                                <User size={20} strokeWidth={1.5} />
                             </Link>
                         </div>
 
@@ -116,60 +72,34 @@ export default function Navbar() {
                 </div>
             </nav>
 
-            {/* Search Overlay */}
-            <div className={clsx("fixed inset-0 bg-white/95 backdrop-blur-md z-50 transition-all duration-500 flex flex-col justify-start pt-32 px-4 md:items-center md:justify-center", isSearchOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none")}>
-                <button onClick={() => setIsSearchOpen(false)} className="absolute top-8 right-8 text-stone-900 hover:text-stone-500 transition-colors p-4">
-                    <X size={32} strokeWidth={1} />
-                </button>
-                <div className="w-full max-w-3xl relative">
-                    <Search size={24} className="absolute left-0 top-1/2 -translate-y-1/2 text-stone-400" />
-                    <input
-                        type="text"
-                        placeholder="Search products..."
-                        autoFocus={isSearchOpen}
-                        className="w-full bg-transparent border-b-2 border-stone-200 focus:border-stone-900 py-4 md:py-6 pl-12 pr-4 text-xl md:text-3xl font-serif text-stone-900 placeholder:text-stone-300 focus:outline-none transition-colors"
-                    />
-                </div>
-                <div className="mt-8 md:mt-12 text-left md:text-center w-full max-w-3xl">
-                    <p className="text-xs uppercase tracking-widest text-stone-500 mb-6 font-medium">Popular Searches</p>
-                    <div className="flex flex-wrap gap-4 md:justify-center">
-                        <button className="px-4 py-2 border border-stone-200 text-xs tracking-widest uppercase hover:bg-stone-50 transition-colors">Silk</button>
-                        <button className="px-4 py-2 border border-stone-200 text-xs tracking-widest uppercase hover:bg-stone-50 transition-colors">Linen</button>
-                        <button className="px-4 py-2 border border-stone-200 text-xs tracking-widest uppercase hover:bg-stone-50 transition-colors">Dresses</button>
-                    </div>
-                </div>
-            </div>
-
-            {/* Mobile Menu Overlay */}
+            {/* Mobile Menu */}
             <div className={clsx(
-                "fixed inset-0 bg-white z-50 transition-transform duration-500 ease-[cubic-bezier(0.83,0,0.17,1)] md:hidden flex flex-col h-full",
-                isMobileMenuOpen ? "translate-x-0 pointer-events-auto" : "-translate-x-full pointer-events-none"
+                "fixed inset-0 bg-[#0a0a0a] z-50 transition-transform duration-500 ease-[cubic-bezier(0.83,0,0.17,1)] md:hidden flex flex-col",
+                isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
             )}>
-                <div className="flex justify-between items-center p-6 border-b border-stone-100 bg-white shrink-0">
-                    <span className="font-serif text-xl tracking-tighter uppercase font-medium text-stone-900">Menu</span>
-                    <button onClick={() => setIsMobileMenuOpen(false)} className="text-stone-900 hover:text-stone-500 transition-colors p-2 -mr-2">
+                <div className="flex justify-between items-center p-6 border-b border-[#2a2a2a]">
+                    <span className="font-serif text-lg tracking-[0.15em] uppercase text-white">Menu</span>
+                    <button onClick={() => setIsMobileMenuOpen(false)} className="text-white hover:text-[#c9a96e] transition-colors">
                         <X size={24} strokeWidth={1.5} />
                     </button>
                 </div>
-
-                <div className="flex-1 overflow-y-auto w-full px-8 py-8 flex flex-col justify-start space-y-8">
-                    {navLinks.map((link) => (
+                <div className="flex-1 px-8 py-10 flex flex-col space-y-8">
+                    {navLinks.map(link => (
                         <Link
                             key={link.name}
                             to={link.path}
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="text-3xl font-serif text-stone-900 hover:text-stone-500 transition-colors"
+                            className="text-3xl font-serif text-white hover:text-[#c9a96e] transition-colors"
                         >
                             {link.name}
                         </Link>
                     ))}
-
-                    <div className="pt-8 mt-8 border-t border-stone-100 flex flex-col space-y-6">
-                        <Link to="/orders" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center text-lg text-stone-900 hover:text-stone-500 transition-colors">
-                            <User size={20} className="mr-4" strokeWidth={1.5} /> My Account & Orders
+                    <div className="pt-8 border-t border-[#2a2a2a] flex flex-col space-y-6">
+                        <Link to="/cart" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center text-lg text-[#999] hover:text-white transition-colors">
+                            <ShoppingBag size={20} className="mr-4" strokeWidth={1.5} /> Cart
                         </Link>
-                        <Link to="/wishlist" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center text-lg text-stone-900 hover:text-stone-500 transition-colors">
-                            <Heart size={20} className="mr-4" strokeWidth={1.5} /> Wishlist
+                        <Link to="/orders" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center text-lg text-[#999] hover:text-white transition-colors">
+                            <User size={20} className="mr-4" strokeWidth={1.5} /> Account
                         </Link>
                     </div>
                 </div>

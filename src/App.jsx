@@ -1,6 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import AnnouncementBar from './components/AnnouncementBar';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
@@ -15,14 +14,17 @@ import Checkout from './pages/Checkout';
 import Collections from './pages/Collections';
 import About from './pages/About';
 import Journal from './pages/Journal';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/manage-style-lit-portal-xyz89');
   return (
-    <div className="min-h-screen flex flex-col font-sans text-stone-900 selection:bg-stone-200">
+    <div className="min-h-screen flex flex-col bg-[#0a0a0a] text-white">
       <ScrollToTop />
-      <AnnouncementBar />
-      <Navbar />
-      <main className="flex-grow pt-[104px] pb-16">
+      {!isAdminRoute && <Navbar />}
+      <main className={`flex-grow ${!isAdminRoute ? 'pt-[72px]' : ''}`}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
@@ -34,10 +36,12 @@ function App() {
           <Route path="/collections" element={<Collections />} />
           <Route path="/about" element={<About />} />
           <Route path="/journal" element={<Journal />} />
+          <Route path="/manage-style-lit-portal-xyz89" element={<AdminLogin />} />
+          <Route path="/manage-style-lit-portal-xyz89/dashboard" element={<AdminDashboard />} />
         </Routes>
       </main>
-      <Footer />
-      <AutoScrollButton />
+      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && <AutoScrollButton />}
     </div>
   );
 }

@@ -1,177 +1,117 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
-import { Filter, ChevronDown, Check, X } from 'lucide-react';
-import clsx from 'clsx';
-
-const ALL_PRODUCTS = [
-    { id: '1', name: 'Cotton Oxford Shirt', price: 2999, rating: 4.8, reviews: 124, image: 'https://images.unsplash.com/photo-1596755094514-f87e32f85e2c?w=800&q=80', badge: 'New', colors: ['#fecdd3', '#ffffff', '#bfdbfe'], category: 'Men' },
-    { id: '2', name: 'Linen Blend Trousers', price: 3499, rating: 4.5, reviews: 89, image: 'https://images.unsplash.com/photo-1594612399992-1b1517cc63f2?w=800&q=80', badge: 'Bestseller', colors: ['#e7e5e4', '#292524'], category: 'Men' },
-    { id: '3', name: 'Silk Wrap Evening Dress', price: 8999, rating: 4.9, reviews: 210, image: 'https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=800&q=80', discount: '-30%', badge: 'Sale', colors: ['#000000', '#991b1b'], category: 'Dresses' },
-    { id: '4', name: 'Leather Crossbody Bag', price: 5499, rating: 4.7, reviews: 56, image: 'https://images.unsplash.com/photo-1584916201218-f4242ceb4809?w=800&q=80', colors: ['#78350f', '#000000'], category: 'Accessories' },
-    { id: '5', name: 'Pleated Midi Skirt', price: 2499, rating: 4.6, reviews: 78, image: 'https://images.unsplash.com/photo-1574845585501-831d6d4596b6?w=800&q=80', colors: ['#f87171', '#000000'], category: 'Women' },
-    { id: '6', name: 'Cashmere Knit Sweater', price: 6999, rating: 4.9, reviews: 142, image: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&q=80', badge: 'New', colors: ['#e7e5e4', '#a8a29e'], category: 'Women' },
-];
+import { ChevronDown } from 'lucide-react';
+import { fetchProducts } from '../services/api';
 
 export default function Shop() {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [activeCategory, setActiveCategory] = useState('All');
-    const [priceRange, setPriceRange] = useState(10000);
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [priceRange, setPriceRange] = useState(50000);
 
-    const categories = ['All', 'Women', 'Men', 'Accessories', 'Dresses'];
-    const sizes = ['XS', 'S', 'M', 'L', 'XL'];
-    const colors = ['#000000', '#ffffff', '#e7e5e4', '#fecdd3', '#bfdbfe', '#991b1b', '#78350f'];
+    useEffect(() => {
+        const load = async () => {
+            try {
+                const data = await fetchProducts();
+                setProducts(data);
+            } catch (e) {
+                console.error('Failed to load products:', e);
+            } finally {
+                setLoading(false);
+            }
+        };
+        load();
+    }, []);
 
-    const filteredProducts = ALL_PRODUCTS.filter(p =>
+    const categories = ['All', ...new Set(products.map(p => p.category).filter(Boolean))];
+    const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
+
+    const filteredProducts = products.filter(p =>
         (activeCategory === 'All' || p.category === activeCategory) &&
         p.price <= priceRange
     );
 
-    const FilterContent = () => (
-        <>
-            {/* Category Filter */}
-            <div>
-                <h3 className="text-sm font-medium tracking-widest uppercase mb-4 flex items-center">
-                    <Filter size={16} className="mr-2" /> Categories
-                </h3>
-                <ul className="space-y-2">
-                    {categories.map(cat => (
-                        <li key={cat}>
-                            <button
-                                onClick={() => { setActiveCategory(cat); setIsFilterOpen(false); }}
-                                className={`text-sm ${activeCategory === cat ? 'text-stone-900 font-medium' : 'text-stone-500 hover:text-stone-900'} transition-colors`}
-                            >
-                                {cat}
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-
-            {/* Price Filter */}
-            <div>
-                <h3 className="text-sm font-medium tracking-widest uppercase mb-4">Price Range</h3>
-                <input
-                    type="range"
-                    min="0"
-                    max="15000"
-                    step="500"
-                    value={priceRange}
-                    onChange={(e) => setPriceRange(Number(e.target.value))}
-                    className="w-full accent-stone-900 h-1 bg-stone-200 rounded-lg appearance-none cursor-pointer"
-                />
-                <div className="flex justify-between text-xs text-stone-500 mt-2">
-                    <span>₹0</span>
-                    <span>₹{priceRange.toLocaleString()}</span>
-                </div>
-            </div>
-
-            {/* Size Filter */}
-            <div>
-                <h3 className="text-sm font-medium tracking-widest uppercase mb-4">Size</h3>
-                <div className="flex flex-wrap gap-2">
-                    {sizes.map(size => (
-                        <button key={size} className="w-10 h-10 border border-stone-200 flex items-center justify-center text-sm hover:border-stone-900 transition-colors">
-                            {size}
-                        </button>
-                    ))}
-                </div>
-            </div>
-
-            {/* Color Filter */}
-            <div>
-                <h3 className="text-sm font-medium tracking-widest uppercase mb-4">Color</h3>
-                <div className="flex flex-wrap gap-2">
-                    {colors.map((color, idx) => (
-                        <button
-                            key={idx}
-                            className={`w-6 h-6 rounded-full border border-stone-200 hover:scale-110 transition-transform`}
-                            style={{ backgroundColor: color }}
-                        ></button>
-                    ))}
-                </div>
-            </div>
-        </>
-    );
-
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-            <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 border-b border-stone-200 pb-6 gap-4">
-                <h1 className="text-3xl font-light tracking-wide text-stone-900">
-                    Shop {activeCategory !== 'All' ? activeCategory : 'Collections'}
-                </h1>
-                <div className="flex items-center justify-between md:justify-end w-full md:w-auto space-x-4">
-                    <span className="text-sm text-stone-500 hidden sm:inline-block">{filteredProducts.length} Products</span>
-
-                    <div className="flex space-x-2 w-full md:w-auto">
-                        <button
-                            onClick={() => setIsFilterOpen(true)}
-                            className="flex-1 md:hidden flex justify-center items-center text-xs font-medium tracking-widest uppercase border border-stone-200 px-4 py-3 hover:border-stone-900 transition-colors"
-                        >
-                            <Filter size={16} className="mr-2" /> Filters
-                        </button>
-                        <div className="relative flex-1 md:flex-none">
-                            <button className="w-full flex justify-center items-center text-xs font-medium tracking-widest uppercase border border-stone-200 px-4 py-3 hover:border-stone-900 transition-colors">
-                                Sort <ChevronDown size={14} className="ml-2" />
-                            </button>
-                        </div>
-                    </div>
-                </div>
+        <div className="bg-[#0a0a0a] min-h-screen">
+            {/* Page Header */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 pb-8">
+                <h1 className="text-5xl md:text-7xl font-serif font-bold text-white mb-3">ARCHIVE</h1>
+                <p className="text-[#666] text-sm">A curated selection of past seasons. Limited availability.</p>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-8 relative">
-                {/* Desktop Sidebar Filters */}
-                <div className="hidden md:block w-64 flex-shrink-0 space-y-8 pr-4 sticky top-32 h-fit">
-                    <FilterContent />
-                </div>
-
-                {/* Mobile Filter Drawer */}
-                <div className={clsx(
-                    "fixed inset-0 bg-black/40 z-50 md:hidden transition-opacity duration-300",
-                    isFilterOpen ? "opacity-100 visible" : "opacity-0 invisible pointer-events-none"
-                )} onClick={() => setIsFilterOpen(false)}></div>
-
-                <div className={clsx(
-                    "fixed inset-y-0 left-0 w-4/5 max-w-sm bg-white z-50 md:hidden shadow-2xl transition-transform duration-300 ease-in-out flex flex-col",
-                    isFilterOpen ? "translate-x-0" : "-translate-x-full"
-                )}>
-                    <div className="flex justify-between items-center p-6 border-b border-stone-100 shrink-0">
-                        <span className="font-serif text-xl tracking-tighter uppercase font-medium text-stone-900">Filters</span>
-                        <button onClick={() => setIsFilterOpen(false)} className="text-stone-900 hover:text-stone-500 transition-colors p-2 -mr-2">
-                            <X size={24} strokeWidth={1.5} />
-                        </button>
-                    </div>
-                    <div className="flex-1 overflow-y-auto w-full px-6 py-8 space-y-10">
-                        <FilterContent />
-                    </div>
-                    <div className="p-6 border-t border-stone-100 shrink-0">
-                        <button
-                            onClick={() => setIsFilterOpen(false)}
-                            className="w-full bg-stone-900 text-white py-4 text-xs tracking-widest uppercase font-medium"
-                        >
-                            Show {filteredProducts.length} Results
-                        </button>
-                    </div>
-                </div>
-
-                {/* Product Grid */}
-                <div className="flex-grow">
-                    {filteredProducts.length > 0 ? (
-                        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8">
-                            {filteredProducts.map(product => (
-                                <ProductCard key={product.id} product={product} />
-                            ))}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+                <div className="flex flex-col md:flex-row gap-8">
+                    {/* Sidebar Filters */}
+                    <div className="w-full md:w-56 flex-shrink-0 space-y-8 md:sticky md:top-24 md:h-fit">
+                        {/* Category */}
+                        <div>
+                            <h3 className="text-xs font-semibold tracking-[0.2em] uppercase text-white mb-4">Category</h3>
+                            <ul className="space-y-3">
+                                {categories.map(cat => (
+                                    <li key={cat}>
+                                        <button
+                                            onClick={() => setActiveCategory(cat)}
+                                            className={`flex items-center text-sm transition-colors ${activeCategory === cat ? 'text-[#c9a96e]' : 'text-[#666] hover:text-white'}`}
+                                        >
+                                            <span className={`w-4 h-4 border mr-3 flex items-center justify-center ${activeCategory === cat ? 'border-[#c9a96e] bg-[#c9a96e]' : 'border-[#333]'}`}>
+                                                {activeCategory === cat && <span className="text-[#0a0a0a] text-[10px]">✓</span>}
+                                            </span>
+                                            {cat}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
-                    ) : (
-                        <div className="flex flex-col items-center justify-center h-64 border border-dashed border-stone-300">
-                            <p className="text-stone-500 mb-4 text-center">No products found matching filters.</p>
-                            <button
-                                onClick={() => { setActiveCategory('All'); setPriceRange(15000); }}
-                                className="text-xs tracking-widest uppercase bg-stone-900 text-white px-6 py-3"
-                            >
-                                Clear Filters
-                            </button>
+
+                        {/* Size */}
+                        <div>
+                            <h3 className="text-xs font-semibold tracking-[0.2em] uppercase text-white mb-4">Size</h3>
+                            <div className="flex flex-wrap gap-2">
+                                {sizes.map(size => (
+                                    <button key={size} className="w-11 h-11 border border-[#2a2a2a] flex items-center justify-center text-xs text-[#999] hover:border-[#c9a96e] hover:text-[#c9a96e] transition-colors">
+                                        {size}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                    )}
+                    </div>
+
+                    {/* Main Content */}
+                    <div className="flex-grow">
+                        {/* Results Bar */}
+                        <div className="flex justify-between items-center mb-6 pb-4 border-b border-[#2a2a2a]">
+                            <span className="text-xs text-[#666] tracking-widest uppercase">Showing {filteredProducts.length} results</span>
+                            <div className="flex items-center gap-2 text-xs tracking-widest uppercase text-[#999]">
+                                <span className="text-[#666]">Sort by</span>
+                                <button className="flex items-center text-white hover:text-[#c9a96e] transition-colors font-semibold">
+                                    Newest <ChevronDown size={14} className="ml-1" />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Product Grid */}
+                        {loading ? (
+                            <div className="flex items-center justify-center h-64">
+                                <div className="text-[#666] text-sm tracking-widest uppercase">Loading...</div>
+                            </div>
+                        ) : filteredProducts.length > 0 ? (
+                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                                {filteredProducts.map(product => (
+                                    <ProductCard key={product._id} product={product} />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center h-64 border border-dashed border-[#2a2a2a]">
+                                <p className="text-[#666] mb-4 text-sm">No products found.</p>
+                                <button
+                                    onClick={() => { setActiveCategory('All'); setPriceRange(50000); }}
+                                    className="text-[10px] tracking-[0.2em] uppercase border border-[#c9a96e] text-[#c9a96e] px-6 py-2 hover:bg-[#c9a96e] hover:text-[#0a0a0a] transition-colors"
+                                >
+                                    Clear Filters
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

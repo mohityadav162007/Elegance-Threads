@@ -1,59 +1,95 @@
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { Lock } from 'lucide-react';
 
 export default function Checkout() {
     return (
-        <div className="bg-[#f9f9f8] min-h-screen text-[#2d3433] py-12">
-            <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-                <Link to="/cart" className="flex items-center text-xs tracking-widest uppercase text-[#5f5e5e] hover:text-[#2d3433] transition-colors mb-8">
-                    <ArrowLeft size={16} className="mr-2" /> Back to bag
+        <div className="bg-[#0a0a0a] min-h-screen text-white">
+            {/* Header */}
+            <div className="border-b border-[#2a2a2a] py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex justify-between items-center">
+                <Link to="/" className="font-serif text-lg tracking-[0.15em] uppercase font-semibold text-white">
+                    Fem Trends Studio
                 </Link>
+                <div className="flex items-center gap-2 text-[10px] tracking-[0.15em] uppercase text-[#666]">
+                    <Lock size={14} /> Secure Checkout
+                </div>
+            </div>
 
-                <h1 className="text-4xl font-serif tracking-tight mb-8">Checkout</h1>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                <div className="flex flex-col lg:flex-row gap-12">
+                    {/* Left: Forms */}
+                    <div className="w-full lg:w-3/5 space-y-10">
+                        {/* Contact */}
+                        <div>
+                            <h2 className="text-2xl font-serif font-bold text-white mb-6">1. CONTACT</h2>
+                            <div className="bg-[#141414] border border-[#2a2a2a] p-6 space-y-4">
+                                <input type="email" placeholder="Email Address" className="w-full bg-[#1a1a1a] border border-[#2a2a2a] text-white px-4 py-3 text-sm focus:outline-none focus:border-[#c9a96e] transition-colors placeholder:text-[#666]" />
+                                <label className="flex items-center gap-3 text-xs text-[#999] cursor-pointer">
+                                    <input type="checkbox" className="accent-[#c9a96e]" />
+                                    Subscribe to editorial updates and exclusive archive access.
+                                </label>
+                            </div>
+                        </div>
 
-                <div className="bg-white p-8 mb-8 border border-[#f2f4f3]">
-                    <h2 className="text-sm font-medium tracking-widest uppercase mb-6 border-b border-[#f2f4f3] pb-4">Contact Information</h2>
-                    <div className="space-y-4">
-                        <input type="email" placeholder="Email Address" className="w-full bg-transparent border-b border-[#adb3b2] py-3 text-sm focus:outline-none focus:border-[#2d3433] transition-colors" />
+                        {/* Shipping */}
+                        <div>
+                            <h2 className="text-2xl font-serif font-bold text-white mb-6">2. SHIPPING</h2>
+                            <div className="bg-[#141414] border border-[#2a2a2a] p-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <input type="text" placeholder="First Name" className="w-full bg-[#1a1a1a] border border-[#2a2a2a] text-white px-4 py-3 text-sm focus:outline-none focus:border-[#c9a96e] transition-colors placeholder:text-[#666]" />
+                                    <input type="text" placeholder="Last Name" className="w-full bg-[#1a1a1a] border border-[#2a2a2a] text-white px-4 py-3 text-sm focus:outline-none focus:border-[#c9a96e] transition-colors placeholder:text-[#666]" />
+                                    <input type="text" placeholder="Street Address" className="w-full md:col-span-2 bg-[#1a1a1a] border border-[#2a2a2a] text-white px-4 py-3 text-sm focus:outline-none focus:border-[#c9a96e] transition-colors placeholder:text-[#666]" />
+                                    <input type="text" placeholder="Apartment, suite, etc. (optional)" className="w-full md:col-span-2 bg-[#1a1a1a] border border-[#2a2a2a] text-white px-4 py-3 text-sm focus:outline-none focus:border-[#c9a96e] transition-colors placeholder:text-[#666]" />
+                                    <input type="text" placeholder="City" className="w-full bg-[#1a1a1a] border border-[#2a2a2a] text-white px-4 py-3 text-sm focus:outline-none focus:border-[#c9a96e] transition-colors placeholder:text-[#666]" />
+                                    <input type="text" placeholder="State/Province" className="w-full bg-[#1a1a1a] border border-[#2a2a2a] text-white px-4 py-3 text-sm focus:outline-none focus:border-[#c9a96e] transition-colors placeholder:text-[#666]" />
+                                    <input type="text" placeholder="Postal Code" className="w-full bg-[#1a1a1a] border border-[#2a2a2a] text-white px-4 py-3 text-sm focus:outline-none focus:border-[#c9a96e] transition-colors placeholder:text-[#666]" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Payment */}
+                        <div>
+                            <h2 className="text-2xl font-serif font-bold text-white mb-6">3. PAYMENT</h2>
+                            <div className="bg-[#141414] border border-[#2a2a2a] p-6 space-y-4">
+                                <div className="flex items-center justify-between bg-[#1a1a1a] border border-[#2a2a2a] px-4 py-3">
+                                    <div className="flex items-center gap-2 text-xs tracking-[0.15em] uppercase text-white">
+                                        <Lock size={14} /> Credit Card
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                    <input type="text" placeholder="Card Number" className="w-full md:col-span-2 bg-[#1a1a1a] border border-[#2a2a2a] text-white px-4 py-3 text-sm focus:outline-none focus:border-[#c9a96e] transition-colors placeholder:text-[#666]" />
+                                    <input type="text" placeholder="Expiration (MM/YY)" className="w-full bg-[#1a1a1a] border border-[#2a2a2a] text-white px-4 py-3 text-sm focus:outline-none focus:border-[#c9a96e] transition-colors placeholder:text-[#666]" />
+                                    <input type="text" placeholder="Security Code" className="w-full bg-[#1a1a1a] border border-[#2a2a2a] text-white px-4 py-3 text-sm focus:outline-none focus:border-[#c9a96e] transition-colors placeholder:text-[#666]" />
+                                    <input type="text" placeholder="Name on Card" className="w-full md:col-span-2 bg-[#1a1a1a] border border-[#2a2a2a] text-white px-4 py-3 text-sm focus:outline-none focus:border-[#c9a96e] transition-colors placeholder:text-[#666]" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right: Order Summary */}
+                    <div className="w-full lg:w-2/5">
+                        <div className="bg-[#141414] border border-[#2a2a2a] p-8 sticky top-24">
+                            <h2 className="text-sm font-semibold tracking-[0.2em] uppercase text-white mb-8">Order Summary</h2>
+                            <div className="space-y-4 text-sm border-b border-[#2a2a2a] pb-6 mb-6">
+                                <div className="flex justify-between"><span className="text-[#666] text-xs tracking-widest uppercase">Subtotal</span><span>₹0.00</span></div>
+                                <div className="flex justify-between"><span className="text-[#666] text-xs tracking-widest uppercase">Shipping</span><span className="text-xs text-[#666]">Calculated at next step</span></div>
+                                <div className="flex justify-between"><span className="text-[#666] text-xs tracking-widest uppercase">Taxes</span><span>₹0.00</span></div>
+                            </div>
+                            <div className="flex justify-between items-center mb-8">
+                                <span className="text-xs tracking-widest uppercase text-[#666]">Total</span>
+                                <span className="text-2xl font-serif text-[#c9a96e]">₹0.00</span>
+                            </div>
+                            <button
+                                onClick={() => alert("Payment processing would happen here in production.")}
+                                className="w-full bg-[#c9a96e] text-[#0a0a0a] py-4 text-xs font-bold tracking-[0.2em] uppercase hover:bg-[#d4b87a] transition-colors flex items-center justify-center gap-2"
+                            >
+                                <Lock size={14} /> Place Order
+                            </button>
+                            <p className="text-center text-[9px] text-[#666] mt-4 tracking-wide uppercase leading-relaxed">
+                                By placing your order, you agree to our Terms of Service and Privacy Policy.
+                            </p>
+                        </div>
                     </div>
                 </div>
-
-                <div className="bg-white p-8 mb-8 border border-[#f2f4f3]">
-                    <h2 className="text-sm font-medium tracking-widest uppercase mb-6 border-b border-[#f2f4f3] pb-4">Shipping Address</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" placeholder="First Name" className="w-full bg-transparent border-b border-[#adb3b2] py-3 text-sm focus:outline-none focus:border-[#2d3433] transition-colors" />
-                        <input type="text" placeholder="Last Name" className="w-full bg-transparent border-b border-[#adb3b2] py-3 text-sm focus:outline-none focus:border-[#2d3433] transition-colors" />
-                        <input type="text" placeholder="Address" className="w-full md:col-span-2 bg-transparent border-b border-[#adb3b2] py-3 text-sm focus:outline-none focus:border-[#2d3433] transition-colors" />
-                        <input type="text" placeholder="City" className="w-full bg-transparent border-b border-[#adb3b2] py-3 text-sm focus:outline-none focus:border-[#2d3433] transition-colors" />
-                        <input type="text" placeholder="Postal Code" className="w-full bg-transparent border-b border-[#adb3b2] py-3 text-sm focus:outline-none focus:border-[#2d3433] transition-colors" />
-                    </div>
-                </div>
-
-                <div className="bg-white p-8 mb-8 border border-[#f2f4f3]">
-                    <h2 className="text-sm font-medium tracking-widest uppercase mb-6 border-b border-[#f2f4f3] pb-4">Payment Setup</h2>
-                    <div className="flex space-x-6 mb-4">
-                        <label className="flex items-center space-x-2 text-sm cursor-pointer">
-                            <input type="radio" name="payment" className="accent-[#2d3433]" defaultChecked />
-                            <span>Credit Card</span>
-                        </label>
-                        <label className="flex items-center space-x-2 text-sm cursor-pointer">
-                            <input type="radio" name="payment" className="accent-[#2d3433]" />
-                            <span>PayPal</span>
-                        </label>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" placeholder="Card Number" className="w-full md:col-span-2 bg-transparent border-b border-[#adb3b2] py-3 text-sm focus:outline-none focus:border-[#2d3433] transition-colors" />
-                        <input type="text" placeholder="Expiration Date (MM/YY)" className="w-full bg-transparent border-b border-[#adb3b2] py-3 text-sm focus:outline-none focus:border-[#2d3433] transition-colors" />
-                        <input type="text" placeholder="Security Code" className="w-full bg-transparent border-b border-[#adb3b2] py-3 text-sm focus:outline-none focus:border-[#2d3433] transition-colors" />
-                    </div>
-                </div>
-
-                <button
-                    onClick={() => alert("Payment logic would process here in production.")}
-                    className="w-full bg-[#2d3433] text-white py-4 text-xs font-medium tracking-widest uppercase hover:bg-[#535252] transition-colors mb-20"
-                >
-                    Pay Now
-                </button>
             </div>
         </div>
     );

@@ -15,7 +15,7 @@ const COLLECTIONS = [
     },
     {
         id: 'minimal-core',
-        title: 'Minimal Core collection',
+        title: 'Minimal Core Collection',
         description: 'Foundation pieces defined by sharp tailoring and neutral palettes.',
         image: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?w=1200&q=80',
     }
@@ -23,28 +23,28 @@ const COLLECTIONS = [
 
 export default function Collections() {
     return (
-        <div className="bg-[#f9f9f8] min-h-screen">
+        <div className="bg-[#0a0a0a] min-h-screen">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
-                <h1 className="text-4xl md:text-5xl font-serif tracking-tight text-[#2d3433] mb-4 text-center">Collections</h1>
-                <p className="text-[#5f5e5e] text-center max-w-2xl mx-auto mb-16 md:mb-24 text-sm md:text-base">
+                <h1 className="text-5xl md:text-7xl font-serif font-bold text-white mb-4">COLLECTIONS</h1>
+                <p className="text-[#666] text-sm max-w-2xl mb-16 md:mb-24">
                     Curated capsules thoughtfully designed around specific seasons, materials, and occasions. Discover the stories behind our garments.
                 </p>
 
-                <div className="space-y-16 md:space-y-32">
+                <div className="space-y-16 md:space-y-24">
                     {COLLECTIONS.map((collection, index) => (
                         <div key={collection.id} className={`flex flex-col ${index % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-8 md:gap-16 group`}>
-                            <div className="w-full md:w-1/2 overflow-hidden aspect-[4/5] md:aspect-square bg-[#EBEBEB]">
+                            <div className="w-full md:w-1/2 overflow-hidden aspect-[4/5] md:aspect-square bg-[#141414] border border-[#2a2a2a]">
                                 <img
                                     src={collection.image}
                                     alt={collection.title}
-                                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                                    className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105 opacity-70 group-hover:opacity-90"
                                 />
                             </div>
                             <div className="w-full md:w-1/2 flex flex-col justify-center items-start">
-                                <span className="text-xs font-medium tracking-[0.2em] uppercase text-[#5f5e5e] mb-4">Collection 0{index + 1}</span>
-                                <h2 className="text-3xl md:text-4xl font-serif text-[#2d3433] mb-6">{collection.title}</h2>
-                                <p className="text-[#5f5e5e] leading-relaxed mb-8 max-w-md">{collection.description}</p>
-                                <Link to="/shop" className="inline-block border border-[#2d3433] text-[#2d3433] px-8 py-3 text-xs tracking-widest uppercase font-medium hover:bg-[#2d3433] hover:text-white transition-colors">
+                                <span className="text-[10px] tracking-[0.2em] uppercase text-[#c9a96e] mb-4">Collection 0{index + 1}</span>
+                                <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-6">{collection.title}</h2>
+                                <p className="text-[#999] leading-relaxed mb-8 max-w-md text-sm">{collection.description}</p>
+                                <Link to="/shop" className="inline-block border border-[#c9a96e] text-[#c9a96e] px-8 py-3 text-[10px] tracking-[0.2em] uppercase font-semibold hover:bg-[#c9a96e] hover:text-[#0a0a0a] transition-colors">
                                     Explore Collection
                                 </Link>
                             </div>

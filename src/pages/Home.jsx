@@ -1,127 +1,116 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
-
-const FEATURED_PRODUCTS = [
-    {
-        id: '1',
-        name: 'Cotton Oxford Shirt',
-        price: 2999,
-        rating: 4.8,
-        reviews: 124,
-        image: 'https://images.unsplash.com/photo-1596755094514-f87e32f85e2c?w=800&q=80',
-        hoverImage: 'https://images.unsplash.com/photo-1604176354204-9268737828e4?w=800&q=80',
-        badge: 'New',
-        colors: ['#fecdd3', '#ffffff', '#bfdbfe'] // pink, white, blue
-    },
-    {
-        id: '2',
-        name: 'Linen Blend Trousers',
-        price: 3499,
-        rating: 4.5,
-        reviews: 89,
-        image: 'https://images.unsplash.com/photo-1594612399992-1b1517cc63f2?w=800&q=80',
-        hoverImage: 'https://images.unsplash.com/photo-1624623278313-a930126a11c3?w=800&q=80',
-        badge: 'Bestseller',
-        colors: ['#e7e5e4', '#292524']
-    },
-    {
-        id: '3',
-        name: 'Silk Wrap Evening Dress',
-        price: 8999,
-        rating: 4.9,
-        reviews: 210,
-        image: 'https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=800&q=80',
-        hoverImage: 'https://images.unsplash.com/photo-1515347619362-e6741b0b5e28?w=800&q=80',
-        discount: '-30%',
-        badge: 'Sale',
-        colors: ['#000000', '#991b1b']
-    },
-    {
-        id: '4',
-        name: 'Leather Crossbody Bag',
-        price: 5499,
-        rating: 4.7,
-        reviews: 56,
-        image: 'https://images.unsplash.com/photo-1584916201218-f4242ceb4809?w=800&q=80',
-        badge: '',
-        colors: ['#78350f', '#000000']
-    }
-];
+import { fetchProducts } from '../services/api';
 
 export default function Home() {
+    const [featuredProducts, setFeaturedProducts] = useState([]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                const data = await fetchProducts();
+                setFeaturedProducts(data.slice(0, 4));
+            } catch (e) {
+                console.error('Failed to load featured products:', e);
+            }
+        };
+        load();
+    }, []);
+
     return (
-        <div className="w-full">
+        <div className="w-full bg-[#0a0a0a]">
             {/* Hero Section */}
-            <section className="relative h-[85vh] w-full overflow-hidden bg-stone-100 flex items-center justify-center">
+            <section className="relative h-[95vh] w-full overflow-hidden flex items-end pb-20">
                 <img
                     src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&q=80"
-                    alt="Summer Collection"
-                    className="absolute inset-0 w-full h-full object-cover object-top opacity-90"
+                    alt="Collection"
+                    className="absolute inset-0 w-full h-full object-cover object-top opacity-40"
                 />
-                <div className="absolute inset-0 bg-black/10"></div>
-                <div className="relative z-10 text-center text-white px-4 max-w-4xl">
-                    <span className="text-sm font-medium tracking-[0.2em] mb-4 block uppercase">New Arrivals</span>
-                    <h1 className="text-5xl md:text-7xl font-light tracking-wide mb-8 leading-tight">Summer Collection 2024</h1>
-                    <Link to="/shop" className="inline-block bg-white text-stone-900 px-10 py-4 text-sm tracking-widest uppercase font-medium hover:bg-stone-100 hover:scale-[1.02] transition-all">
-                        Shop Now
-                    </Link>
-                </div>
-            </section>
-
-            {/* Categories Grid */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
-                    {[
-                        { name: 'Women', img: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80' },
-                        { name: 'Men', img: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?w=600&q=80' },
-                        { name: 'Accessories', img: 'https://images.unsplash.com/photo-1509319117193-57bab727e09d?w=600&q=80' },
-                        { name: 'Dresses', img: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&q=80' }
-                    ].map((cat, idx) => (
-                        <Link key={idx} to="/shop" className="group relative aspect-[3/4] overflow-hidden bg-stone-100">
-                            <img src={cat.img} alt={cat.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent"></div>
-                            <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 flex justify-center md:justify-between items-center text-white">
-                                <span className="text-sm md:text-lg font-medium tracking-wide">{cat.name}</span>
-                                <span className="hidden md:inline-block text-sm tracking-widest uppercase opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">Shop</span>
-                            </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent"></div>
+                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                    <span className="text-[11px] tracking-[0.3em] uppercase text-[#c9a96e] mb-4 block font-sans">Autumn / Winter</span>
+                    <h1 className="text-6xl md:text-[120px] font-serif font-bold leading-[0.9] tracking-tight text-white mb-6">
+                        COLLECTION<br/><span className="text-[#c9a96e]">01</span>
+                    </h1>
+                    <p className="text-[#999] text-sm max-w-md mb-8 leading-relaxed border-l-2 border-[#2a2a2a] pl-4">
+                        A study in structural darkness and negative space.<br/>Engineered for the cinematic void.
+                    </p>
+                    <div className="flex gap-4">
+                        <Link to="/shop" className="inline-block bg-white text-[#0a0a0a] px-8 py-3 text-[11px] tracking-[0.2em] uppercase font-semibold hover:bg-[#c9a96e] transition-colors">
+                            Explore Now
                         </Link>
-                    ))}
-                </div>
-            </section>
-
-            {/* New Arrivals Grid */}
-            <section id="new-arrivals" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-                <div className="flex justify-between items-end mb-8 md:mb-10">
-                    <h2 className="text-2xl md:text-3xl font-light tracking-wide text-stone-900">New Arrivals</h2>
-                    <Link to="/shop" className="text-xs md:text-sm font-medium tracking-widest uppercase text-stone-900 hover:text-stone-500 transition-colors border-b border-stone-900 pb-1">
-                        View All
-                    </Link>
-                </div>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
-                    {FEATURED_PRODUCTS.map(product => (
-                        <ProductCard key={product.id} product={product} />
-                    ))}
-                </div>
-            </section>
-
-            {/* Promotional Banner */}
-            <section className="relative h-[60vh] w-full overflow-hidden bg-stone-900 my-16">
-                <img
-                    src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=1600&q=80"
-                    alt="Summer Essentials"
-                    className="absolute inset-0 w-full h-full object-cover object-center opacity-70"
-                />
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="bg-white/95 backdrop-blur-sm p-12 md:p-16 text-center max-w-lg mx-4">
-                        <span className="text-xs font-semibold tracking-[0.2em] uppercase text-stone-500 mb-4 block">Summer Essentials</span>
-                        <h2 className="text-3xl md:text-4xl font-light tracking-wide mb-6 text-stone-900">Embrace the Season</h2>
-                        <p className="text-stone-600 mb-8 leading-relaxed text-sm">Discover our curated selection of breathable fabrics and effortless silhouettes designed for the warmer days ahead.</p>
-                        <Link to="/shop" className="inline-block bg-stone-900 text-white px-8 py-3 text-sm tracking-widest uppercase font-medium hover:bg-stone-800 transition-colors border border-stone-900">
-                            Explore Collection
+                        <Link to="/collections" className="inline-block border border-[#2a2a2a] text-white px-8 py-3 text-[11px] tracking-[0.2em] uppercase font-semibold hover:border-[#c9a96e] hover:text-[#c9a96e] transition-colors">
+                            View Lookbook
                         </Link>
                     </div>
                 </div>
             </section>
+
+            {/* Curated Archives */}
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
+                <div className="flex flex-col md:flex-row md:justify-between md:items-end mb-12 md:mb-16 gap-4">
+                    <h2 className="text-4xl md:text-6xl font-serif font-bold text-white leading-[1.1]">
+                        CURATED<br/>ARCHIVES
+                    </h2>
+                    <Link to="/shop" className="text-[11px] tracking-[0.2em] uppercase text-[#999] hover:text-[#c9a96e] transition-colors flex items-center gap-2">
+                        View All Archives →
+                    </Link>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Menswear Card */}
+                    <Link to="/shop" className="group relative aspect-[4/5] md:aspect-[3/4] overflow-hidden bg-[#141414] rounded-sm">
+                        <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=800&q=80" alt="Menswear" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/90 to-transparent"></div>
+                        <div className="absolute bottom-6 left-6">
+                            <span className="text-[10px] tracking-[0.2em] uppercase text-[#c9a96e] block mb-1">Category</span>
+                            <h3 className="text-2xl md:text-3xl font-serif font-bold text-white">MENSWEAR</h3>
+                        </div>
+                    </Link>
+
+                    {/* New Drops Card */}
+                    <Link to="/shop" className="group relative aspect-[4/5] md:aspect-[3/4] overflow-hidden bg-[#141414] rounded-sm">
+                        <img src="https://images.unsplash.com/photo-1509319117193-57bab727e09d?w=800&q=80" alt="New Drops" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/90 to-transparent"></div>
+                        <div className="absolute bottom-6 left-6 right-6">
+                            <span className="text-[10px] tracking-[0.2em] uppercase text-[#c9a96e] block mb-1">Latest Release</span>
+                            <h3 className="text-2xl md:text-3xl font-serif font-bold text-white mb-2">NEW DROPS</h3>
+                            <p className="text-[#666] text-xs leading-relaxed">The latest iterations in shadow and form. Limited quantities available.</p>
+                        </div>
+                    </Link>
+                </div>
+
+                {/* Full Width Womenswear */}
+                <Link to="/shop" className="group relative block w-full aspect-[16/7] md:aspect-[16/6] overflow-hidden bg-[#141414] mt-4 rounded-sm">
+                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1400&q=80" alt="Womenswear" className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/90 via-[#0a0a0a]/30 to-transparent"></div>
+                    <div className="absolute bottom-8 left-8 md:bottom-12 md:left-12">
+                        <span className="text-[10px] tracking-[0.2em] uppercase text-[#c9a96e] block mb-2">Category</span>
+                        <h3 className="text-4xl md:text-7xl font-serif font-bold text-white mb-4">WOMENSWEAR</h3>
+                        <span className="inline-block border border-[#c9a96e] text-[#c9a96e] px-6 py-2 text-[10px] tracking-[0.2em] uppercase group-hover:bg-[#c9a96e] group-hover:text-[#0a0a0a] transition-colors">
+                            View Collection
+                        </span>
+                    </div>
+                </Link>
+            </section>
+
+            {/* New Arrivals */}
+            {featuredProducts.length > 0 && (
+                <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+                    <div className="flex justify-between items-end mb-10 md:mb-14">
+                        <h2 className="text-3xl md:text-5xl font-serif font-bold text-white">NEW ARRIVALS</h2>
+                        <Link to="/shop" className="text-[11px] tracking-[0.2em] uppercase text-[#999] hover:text-[#c9a96e] transition-colors">
+                            View All →
+                        </Link>
+                    </div>
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                        {featuredProducts.map(product => (
+                            <ProductCard key={product._id} product={product} />
+                        ))}
+                    </div>
+                </section>
+            )}
         </div>
     );
 }

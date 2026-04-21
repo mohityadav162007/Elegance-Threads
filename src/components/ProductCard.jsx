@@ -1,82 +1,53 @@
-import { Heart, Star } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1550614000-4b95eb1580bc?q=80&w=600&auto=format&fit=crop';
 
 export default function ProductCard({ product }) {
-    const [isHovered, setIsHovered] = useState(false);
-    const [activeColorStyle, setActiveColorStyle] = useState(product.colors[0]);
+    const productId = product._id || product.id;
+    const productImage = product.imageUrl || product.image || FALLBACK_IMAGE;
 
     return (
-        <div
-            className="group relative flex flex-col cursor-pointer"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-        >
+        <div className="group relative flex flex-col cursor-pointer">
             {/* Image Container */}
-            <div className="relative aspect-[3/4] overflow-hidden bg-stone-100 mb-4 rounded-sm">
-                <Link to={`/product/${product.id}`}>
+            <div className="relative aspect-[3/4] overflow-hidden bg-[#141414] mb-4 border border-[#2a2a2a] group-hover:border-[#333] transition-colors">
+                <Link to={`/product/${productId}`}>
                     <img
-                        src={isHovered && product.hoverImage ? product.hoverImage : product.image}
+                        src={productImage}
                         alt={product.name}
-                        className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                        className="w-full h-full object-cover object-center transition-all duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                        onError={(e) => { e.target.src = FALLBACK_IMAGE; }}
                     />
                 </Link>
 
                 {/* Badges */}
-                <div className="absolute top-3 left-3 flex flex-col gap-2">
-                    {product.badge && (
-                        <span className={`text-[10px] tracking-widest uppercase px-2 py-1 font-medium ${product.badge === 'Sale' ? 'bg-rose-600 text-white' : 'bg-white text-stone-900 border border-stone-200'}`}>
-                            {product.badge}
+                {product.category && (
+                    <div className="absolute top-3 left-3">
+                        <span className="text-[9px] tracking-[0.15em] uppercase px-2 py-1 font-medium bg-[#0a0a0a]/80 text-[#c9a96e] border border-[#2a2a2a]">
+                            {product.category}
                         </span>
-                    )}
-                    {product.discount && (
-                        <span className="text-[10px] tracking-widest uppercase px-2 py-1 font-medium bg-rose-600 text-white">
-                            {product.discount}
-                        </span>
-                    )}
-                </div>
+                    </div>
+                )}
 
-                {/* Wishlist Button */}
-                <button className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 shadow-sm transition-opacity duration-300 hover:text-rose-600">
-                    <Heart size={16} strokeWidth={1.5} />
+                {/* Wishlist */}
+                <button className="absolute top-3 right-3 w-8 h-8 bg-[#0a0a0a]/60 border border-[#2a2a2a] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:border-[#c9a96e] hover:text-[#c9a96e] text-white">
+                    <Heart size={14} strokeWidth={1.5} />
                 </button>
             </div>
 
             {/* Product Info */}
             <div className="flex flex-col space-y-1">
-                <div className="flex justify-between items-start">
-                    <Link to={`/product/${product.id}`} className="text-sm font-medium text-stone-900 hover:text-stone-600 transition-colors line-clamp-1">
-                        {product.name}
-                    </Link>
-                    <span className="text-sm font-medium text-stone-900 ml-4 flex-shrink-0">
-                        ₹{product.price.toLocaleString('en-IN')}
+                <Link to={`/product/${productId}`} className="text-xs md:text-sm font-semibold tracking-[0.05em] uppercase text-white hover:text-[#c9a96e] transition-colors line-clamp-1">
+                    {product.name}
+                </Link>
+                {product.category && (
+                    <span className="text-[10px] tracking-[0.15em] uppercase text-[#666]">
+                        {product.category}
                     </span>
-                </div>
-
-                {/* Rating */}
-                <div className="flex items-center text-stone-400 space-x-1">
-                    <div className="flex">
-                        {[...Array(5)].map((_, i) => (
-                            <Star key={i} size={12} fill={i < Math.floor(product.rating) ? 'currentColor' : 'none'} className={i < Math.floor(product.rating) ? 'text-stone-900' : ''} />
-                        ))}
-                    </div>
-                    <span className="text-xs">({product.reviews})</span>
-                </div>
-
-                {/* Color Swatches */}
-                {product.colors && product.colors.length > 0 && (
-                    <div className="flex space-x-1 pt-2">
-                        {product.colors.map((color, idx) => (
-                            <button
-                                key={idx}
-                                onMouseEnter={() => setActiveColorStyle(color)}
-                                className={`w-3.5 h-3.5 rounded-full border ${activeColorStyle === color ? 'border-stone-400 p-[1px]' : 'border-stone-200'} transition-all`}
-                            >
-                                <div className="w-full h-full rounded-full" style={{ backgroundColor: color }}></div>
-                            </button>
-                        ))}
-                    </div>
                 )}
+                <span className="text-sm font-medium text-[#c9a96e] mt-1">
+                    ₹{product.price?.toLocaleString('en-IN')}
+                </span>
             </div>
         </div>
     );

@@ -30,38 +30,36 @@ const ARTICLES = [
 
 export default function Journal() {
     return (
-        <div className="bg-white min-h-screen text-[#2d3433]">
+        <div className="bg-[#0a0a0a] min-h-screen text-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
-
-                <header className="mb-16 md:mb-20 text-center">
-                    <h1 className="text-4xl md:text-5xl font-serif tracking-tight mb-4">The Journal</h1>
-                    <p className="text-[#5f5e5e] text-sm md:text-base max-w-xl mx-auto">Editorials, styling guides, and dispatches from the Elegance Threads studio.</p>
+                <header className="mb-16 md:mb-20">
+                    <h1 className="text-5xl md:text-7xl font-serif font-bold mb-4">EDITORIAL</h1>
+                    <p className="text-[#666] text-sm max-w-xl">Editorials, styling guides, and dispatches from the Style-lit studio.</p>
                 </header>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                     {ARTICLES.map((article) => (
                         <article key={article.id} className="group cursor-pointer flex flex-col">
-                            <div className="w-full aspect-[4/3] bg-[#f9f9f8] mb-6 overflow-hidden">
+                            <div className="w-full aspect-[4/3] bg-[#141414] mb-4 overflow-hidden border border-[#2a2a2a]">
                                 <img
                                     src={article.image}
                                     alt={article.title}
-                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105 opacity-70 group-hover:opacity-100"
                                 />
                             </div>
-                            <div className="flex items-center space-x-3 text-[10px] tracking-widest uppercase text-[#5f5e5e] mb-3">
-                                <span className="font-medium text-[#2d3433]">{article.category}</span>
+                            <div className="flex items-center space-x-3 text-[10px] tracking-[0.15em] uppercase text-[#666] mb-3">
+                                <span className="text-[#c9a96e]">{article.category}</span>
                                 <span>•</span>
                                 <span>{article.date}</span>
                             </div>
-                            <h2 className="text-2xl font-serif mb-3 group-hover:text-[#5f5e5e] transition-colors">{article.title}</h2>
-                            <p className="text-[#5f5e5e] text-sm leading-relaxed mb-6 flex-grow">{article.excerpt}</p>
-                            <Link to="#" className="inline-flex items-center text-xs tracking-widest uppercase font-medium border-b border-[#2d3433] pb-1 self-start group-hover:text-[#5f5e5e] group-hover:border-[#5f5e5e] transition-colors">
-                                Read Article <ArrowRight size={14} className="ml-2 transform group-hover:translate-x-1 transition-transform" />
+                            <h2 className="text-xl font-serif font-bold mb-3 group-hover:text-[#c9a96e] transition-colors">{article.title}</h2>
+                            <p className="text-[#999] text-sm leading-relaxed mb-6 flex-grow">{article.excerpt}</p>
+                            <Link to="#" className="inline-flex items-center text-[10px] tracking-[0.15em] uppercase font-semibold text-[#c9a96e] self-start group-hover:gap-2 transition-all">
+                                Read Article <ArrowRight size={14} className="ml-1" />
                             </Link>
                         </article>
                     ))}
                 </div>
-
             </div>
         </div>
     );

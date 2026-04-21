@@ -1,16 +1,55 @@
-# React + Vite
+# Style-lit
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A premium, luxury fashion e-commerce platform built with React, Vite, and Node.js.
 
-Currently, two official plugins are available:
+## Tech Stack
+-   **Frontend**: React, Vite, Tailwind CSS (v4)
+-   **Backend**: Node.js, Express, MongoDB
+-   **Icons**: Lucide React
+-   **Fonts**: Cormorant Garamond (Serif), Inter (Sans-serif)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Getting Started
 
-## React Compiler
+### Prerequisites
+-   Node.js installed
+-   MongoDB database (Atlas or local)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Installation
 
-## Expanding the ESLint configuration
+1.  **Clone the repository**
+2.  **Frontend Setup**:
+    ```bash
+    npm install
+    npm run dev
+    ```
+3.  **Backend Setup**:
+    -   Navigate to the `server/` directory.
+    -   Create a `.env` file based on the provided configuration.
+    -   Run the server:
+    ```bash
+    npm install
+    node server.js
+    ```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Admin Panel
+
+The admin panel is used to manage products and view recent customer orders.
+
+-   **Link**: `http://localhost:5173/manage-style-lit-portal-xyz89`
+-   **Credentials**: The password is defined as `ADMIN_PASSWORD` in your server `.env` file.
+
+## Environment Variables (Server)
+
+| Variable | Description |
+| :--- | :--- |
+| `PORT` | The port the backend server runs on (default: 5000) |
+| `MONGO_URI` | Your MongoDB connection string |
+| `JWT_SECRET` | Secret key for JWT authentication |
+| `ADMIN_PASSWORD` | Password for the admin panel portal |
+
+## Features
+
+-   **Luxury Aesthetic**: Dark mode design with gold accents and high-end typography.
+-   **Dynamic Catalog**: Integrated with MongoDB for real-time product management.
+-   **Admin Dashboard**: Manage inventory and track order status (Pending, Shipped, Delivered, etc.).
+-   **Responsive Design**: Optimized for mobile, tablet, and desktop viewing.
